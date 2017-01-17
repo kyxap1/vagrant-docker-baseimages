@@ -15,6 +15,9 @@ RUN yum check-update -y && yum install -y \
     net-tools \
     sudo
 
+# generate new host key
+RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N ''
+
 # setup the vagrant user
 RUN if ! getent passwd vagrant; then useradd -d /home/vagrant -m -s /bin/bash vagrant; fi \
     && echo vagrant:vagrant | chpasswd \
