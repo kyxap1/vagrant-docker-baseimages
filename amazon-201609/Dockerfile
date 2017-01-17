@@ -12,11 +12,13 @@ RUN yum check-update -y && yum install -y \
     curl \
     lsb-release \
     openssh-server \
+    openssh-clients \
     net-tools \
     sudo
 
-# generate new host key
-RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N ''
+# generate new host keys
+RUN ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key -N '' \
+    && ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N ''
 
 # setup the vagrant user
 RUN if ! getent passwd vagrant; then useradd -d /home/vagrant -m -s /bin/bash vagrant; fi \
@@ -34,6 +36,8 @@ RUN mkdir -p /home/vagrant/.ssh \
       -O /home/vagrant/.ssh/authorized_keys \
     && chmod 0600 /home/vagrant/.ssh/authorized_keys \
     && chown -R vagrant /home/vagrant/.ssh
+
+EXPOSE 22
 
 # run sshd in the foreground
 CMD /usr/sbin/sshd -D \
