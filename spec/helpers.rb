@@ -11,6 +11,8 @@ end
 # helper methods
 module Helpers
 
+  USER = 'kyxap'
+
   def write_config(dir, content)
     File.write "#{dir}/Vagrantfile", content
   end
@@ -19,7 +21,7 @@ module Helpers
     <<-VAGRANTFILE.unindent
       Vagrant.configure(2) do |config|
         config.vm.provider "docker" do |d|
-          d.image = "tknerr/baseimage-#{platform}:#{version}"
+          d.image = "#{USER}/baseimage-#{platform}:#{version}"
           d.has_ssh = true
         end
 
@@ -33,7 +35,7 @@ module Helpers
     <<-VAGRANTFILE.unindent
     Vagrant.configure(2) do |config|
       config.vm.provider "docker" do |d|
-        d.image = "tknerr/baseimage-#{platform}:#{version}"
+        d.image = "#{USER}/baseimage-#{platform}:#{version}"
         d.has_ssh = true
       end
     end
@@ -43,7 +45,7 @@ module Helpers
   def vagrantfile_with_box_only(platform, version)
     <<-VAGRANTFILE.unindent
     Vagrant.configure(2) do |config|
-      config.vm.box = "tknerr/baseimage-#{platform}-#{version}"
+      config.vm.box = "#{USER}/baseimage-#{platform}-#{version}"
     end
     VAGRANTFILE
   end

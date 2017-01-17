@@ -4,8 +4,10 @@ require 'rubygems/package'
 
 include Helpers
 
+USER = 'kyxap'
 PLATFORMS = {
-  ubuntu: ["12.04", "14.04", "16.04"]
+  ubuntu: ["14.04", "16.04"],
+  amazon: ["2016.09"]
 }
 
 desc "build the docker base images"
@@ -31,9 +33,8 @@ task :test do
   sh "rspec --format doc --color"
 end
 
-
 def build_docker_image(platform, version)
-  image = "tknerr/baseimage-#{platform}:#{version}"
+  image = "#{USER}/baseimage-#{platform}:#{version}"
   sh "docker build -t #{image} #{dir(platform, version)}"
 end
 

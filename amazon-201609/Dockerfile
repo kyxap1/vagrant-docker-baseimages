@@ -1,14 +1,14 @@
-FROM ubuntu:12.04
+FROM amazonlinux:2016.09
 
-MAINTAINER Torben Knerr <mail@tknerr.de>
-
-ENV DEBIAN_FRONTEND noninteractive
+MAINTAINER Alexander Kukhar <kyxap@kyxap.pro>
 
 # ensure we have the en_US.UTF-8 locale available
-RUN locale-gen en_US.UTF-8
+RUN localedef -i en_US -f UTF-8 en_US.UTF-8
 
 # install common dependencies
-RUN apt-get update && apt-get install -y \
+RUN yum check-update -y && yum install -y \
+    passwd \
+    wget \
     curl \
     lsb-release \
     openssh-server \
@@ -32,13 +32,10 @@ RUN mkdir -p /home/vagrant/.ssh \
     && chmod 0600 /home/vagrant/.ssh/authorized_keys \
     && chown -R vagrant /home/vagrant/.ssh
 
-# don't clean packages, we might be using vagrant-cachier
-RUN rm /etc/apt/apt.conf.d/docker-clean
-
 # run sshd in the foreground
 CMD /usr/sbin/sshd -D \
     -o UseDNS=no\
-    -o UsePAM=no\
     -o PasswordAuthentication=yes\
     -o UsePrivilegeSeparation=no\
     -o PidFile=/tmp/sshd.pid
+

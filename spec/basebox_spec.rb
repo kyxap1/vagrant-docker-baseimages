@@ -3,7 +3,8 @@ require 'spec_helper'
 describe 'base boxes for the docker baseimages' do
 
   PLATFORMS = {
-    ubuntu: ["12.04", "14.04", "16.04"]
+    ubuntu: ["14.04", "16.04"],
+    amazon: ["2016.09"]
   }
 
   PLATFORMS.each_pair do |platform, versions|
@@ -14,7 +15,7 @@ describe 'base boxes for the docker baseimages' do
         write_config @tempdir, vagrantfile_with_box_only(platform, version)
 
         # need to import the basebox once, see mitchellh/vagrant#5667
-        basebox = "tknerr/baseimage-#{platform}-#{version}"
+        basebox = "#{USER}/baseimage-#{platform}-#{version}"
         cmd = Mixlib::ShellOut.new("vagrant box add #{basebox}")
         result = cmd.run_command
         expect(result.stdout).to include "==> box: Successfully added box '#{basebox}' (v1.0.0) for 'docker'!"
@@ -25,7 +26,7 @@ describe 'base boxes for the docker baseimages' do
         FileUtils.rm_rf @tempdir
       end
 
-      describe "tknerr/baseimage-#{platform}-#{version}" do
+      describe "#{USER}/baseimage-#{platform}-#{version}" do
         it 'comes up on  `vagrant up --provider docker`' do
           cmd = Mixlib::ShellOut.new("vagrant up --provider docker", :cwd => @tempdir)
           result = cmd.run_command
